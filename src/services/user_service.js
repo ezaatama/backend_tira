@@ -37,7 +37,10 @@ const login = async (request) => {
             username: user.username
         },
         select: {
-            token: true
+            token: true,
+            username: true,
+            name: true,
+            role: true
         }
     })
 }
