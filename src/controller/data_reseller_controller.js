@@ -26,6 +26,7 @@ const getDataSales = async (req, res, next) => {
         });
 
         res.status(200).json({
+            success: true,
             messsage:"success get data sales",
             data: formattedData
         });
