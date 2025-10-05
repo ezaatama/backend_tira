@@ -4,6 +4,7 @@ const create = async (req, res, next) => {
     try {
         const atasan = await atasanService.create(req.body);
         res.status(201).json({
+            success: true,
             messsage:"success create atasan",
             data: atasan
         });
@@ -16,6 +17,7 @@ const getAll = async (req, res, next) => {
     try {
         const atasanList = await atasanService.getAllAtasan();
         res.status(200).json({
+            success: true,
             messsage:"success get all atasan",
             data: atasanList
         });
@@ -24,11 +26,47 @@ const getAll = async (req, res, next) => {
     }
 }
 
+const getById = async (req, res, next) => {
+    try {
+        const{id} = req.params;
+        const result = await atasanService.getAtasanById(id);
+
+        res.status(200).json({
+            success: true,
+            message: "Success get atasan by id",
+            data: result
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+const updateAtasan = async (req, res, next) => {
+    try {
+        const request = {
+            m_rep_id: req.params.id,
+            ...req.body,
+        }
+
+        const result = await atasanService.updateAtasan(request);
+
+        res.status(200).json({
+            success: true,
+            message: "Atasan updated successfully",
+            data: result
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 const deleteAtasan = async (req, res, next) => { 
     try {
-        const { m_rep_id } = req.params;
-        await atasanService.deleteAtasan(m_rep_id);
+        const { id } = req.params;
+        await atasanService.deleteAtasan(id);
         res.status(200).json({
+            success: true,
             message: `Atasan dengan id ${m_rep_id} berhasil dihapus`
         });
     } catch (error) {
@@ -39,5 +77,7 @@ const deleteAtasan = async (req, res, next) => {
 export default {
     create,
     getAll,
+    getById,
+    updateAtasan,
     deleteAtasan
 }

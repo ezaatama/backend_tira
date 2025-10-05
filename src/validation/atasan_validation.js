@@ -8,4 +8,11 @@ const createValidation = Joi.object({
   m_manager_id: Joi.string().max(10).optional(),
 });
 
-export {createValidation}
+const updateValidation = Joi.object({
+  m_branch_id: Joi.string().max(3).optional(),
+  m_name: Joi.string().max(255).optional(),
+});
+
+const atasanIdValidation = Joi.string().max(10).required();
+
+export {createValidation, updateValidation, atasanIdValidation}
