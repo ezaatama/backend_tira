@@ -10,6 +10,7 @@ const routers = new express.Router();
 //atasan routes
 routers.post('/api/atasan', authMiddleware, adminMiddleware, atasanController.create);
 routers.get('/api/atasan', authMiddleware, adminMiddleware, atasanController.getAll);
+routers.get('/api/atasan-gepd', authMiddleware, adminMiddleware, atasanController.getGEPD);
 routers.get('/api/atasan/:id', authMiddleware, adminMiddleware, atasanController.getById);
 routers.put('/api/atasan/:id', authMiddleware, adminMiddleware, atasanController.updateAtasan);
 routers.delete('/api/atasan/:id', authMiddleware, adminMiddleware, atasanController.deleteAtasan);
