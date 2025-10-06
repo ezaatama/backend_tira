@@ -125,7 +125,7 @@ const deleteMember = async (memberId) => {
         }
     });
 
-    if (!existingMember) {
+    if (!existingMembers) {
         throw new ResponseError(404, `Member dengan id ${memberId} tidak ditemukan`);
     }
 
