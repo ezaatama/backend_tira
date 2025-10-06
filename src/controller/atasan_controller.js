@@ -26,6 +26,19 @@ const getAll = async (req, res, next) => {
     }
 }
 
+const getGEPD = async (req, res, next) => {
+    try {
+        const gepdList = await atasanService.getAtasanGEPD();
+        res.status(200).json({
+            success: true,
+            messsage:"success get atasan GEPD",
+            data: gepdList
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 const getById = async (req, res, next) => {
     try {
         const{id} = req.params;
@@ -63,11 +76,12 @@ const updateAtasan = async (req, res, next) => {
 
 const deleteAtasan = async (req, res, next) => { 
     try {
-        const { id } = req.params;
-        await atasanService.deleteAtasan(id);
+        const {id} = req.params;
+        const result = await atasanService.deleteAtasan(id);
         res.status(200).json({
             success: true,
-            message: `Atasan dengan id ${m_rep_id} berhasil dihapus`
+            message: `Atasan dengan id ${id} berhasil dihapus`,
+            data: result
         });
     } catch (error) {
         next(error);
@@ -77,6 +91,7 @@ const deleteAtasan = async (req, res, next) => {
 export default {
     create,
     getAll,
+    getGEPD,
     getById,
     updateAtasan,
     deleteAtasan

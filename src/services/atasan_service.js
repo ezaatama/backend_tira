@@ -60,7 +60,28 @@ const create = async (request) => {
 const getAllAtasan = async () => {
     return await prismaClient.atasan.findMany({
         include: {
-            managed_atasan: true,
+            managed_atasan: {
+                where: {
+                    m_current_position: { not: "GEPD" }
+                }
+            },
+            managed_member: true,
+            manager: true,
+        }
+    });
+}
+
+const getAtasanGEPD = async () => {
+    return await prismaClient.atasan.findMany({
+        where: {
+            m_current_position: "GEPD"
+        },
+        include: {
+            managed_atasan: {
+                where: {
+                    m_current_position: { not: "GEPD" }
+                }
+            },
             managed_member: true,
             manager: true,
         }
@@ -75,7 +96,11 @@ const getAtasanById = async (atasanId) => {
             m_rep_id: atasanId
         },
         include: {
-            managed_atasan: true,
+            managed_atasan: {
+                where: {
+                    m_current_position: { not: "GEPD" }
+                }
+            },
             managed_member: true,
             manager: true,
         }
@@ -112,7 +137,7 @@ const updateAtasan = async (request) => {
         });
 
         if(!atasan) {
-            throw new ResponseError(404, `Atasan dengan id ${updateRequest.m_manager_id} tidak ditemukan`);
+            throw new ResponseError(404, `Atasan dengan id ${atasanRequest.m_manager_id} tidak ditemukan`);
         }
     }
 
@@ -132,6 +157,7 @@ const updateAtasan = async (request) => {
 }
 
 const deleteAtasan = async (atasanId) => {
+    
     atasanId = validate(atasanIdValidation, atasanId);
 
     const existingAtasan = await prismaClient.atasan.findUnique({
@@ -140,9 +166,14 @@ const deleteAtasan = async (atasanId) => {
         },
         include: {
             managed_member: true,
-            managed_atasan: true
+            managed_atasan: {
+                where: {
+                    m_current_position: { not: "GEPD" }
+                }
+            },
         }
     });
+
 
     if(!existingAtasan) {
             throw new ResponseError(404, `Atasan dengan id ${atasanId} tidak ditemukan`);
@@ -156,21 +187,22 @@ const deleteAtasan = async (atasanId) => {
         throw new ResponseError(400, `Tidak dapat menghapus atasan yang masih memiliki atasan bawahan. Harap pindahkan ${existingAtasan.managed_atasan.length} atasan terlebih dahulu.`);
     }
 
-    return await prismaClient.atasan.delete({
+
+    return prismaClient.atasan.delete({
         where: { m_rep_id: atasanId },
         select: {
             m_rep_id: true,
-            m_name: true,
-            m_branch_id: true,
-            m_current_position: true
+            m_name: true
         }
     });
+    
 }
 
 
 export default {
     create,
     getAllAtasan,
+    getAtasanGEPD,
     getAtasanById,
     updateAtasan,
     deleteAtasan
